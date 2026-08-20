@@ -29,9 +29,12 @@ export function Hero() {
         </div>
       </div>
       <div className="relative min-h-[280px] md:min-h-0">
-        <div className="absolute inset-0 flex items-center justify-center border-none bg-[repeating-linear-gradient(135deg,#1c2c52,#1c2c52_10px,#182548_10px,#182548_20px)] p-6 text-center text-[13px] tracking-[0.03em] text-[var(--color-hero-eyebrow)]">
-          Drop a photo of East Stuart / community here (assets/hero.jpg)
-        </div>
+        <img
+          src="/assets/hero.jpg"
+          alt="A residential street in East Stuart"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-navy)]/50 via-transparent to-transparent" />
       </div>
     </section>
   )

@@ -12,7 +12,9 @@ export function Programs() {
       <div className="pt-6">
         <NumberedList />
       </div>
-      <div className="h-[280px] overflow-hidden rounded bg-[repeating-linear-gradient(135deg,#e9e5d8,#e9e5d8_10px,#f2efe4_10px,#f2efe4_20px)]" />
+      <div className="h-[280px] overflow-hidden rounded">
+        <img src="/assets/programs.jpg" alt="A community resource clinic in progress" className="h-full w-full object-cover" />
+      </div>
     </section>
   )
 }

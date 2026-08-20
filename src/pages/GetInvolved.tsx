@@ -13,7 +13,9 @@ export function GetInvolved() {
       <div className="grid grid-cols-1 gap-14 pt-8 lg:grid-cols-2">
         <NeedsList />
         <div>
-          <div className="mb-7 h-[220px] overflow-hidden rounded bg-[repeating-linear-gradient(135deg,#e9e5d8,#e9e5d8_10px,#f2efe4_10px,#f2efe4_20px)]" />
+          <div className="mb-7 h-[220px] overflow-hidden rounded">
+            <img src="/assets/involved.jpg" alt="A community gathering" className="h-full w-full object-cover" />
+          </div>
           <ConnectCard />
         </div>
       </div>
