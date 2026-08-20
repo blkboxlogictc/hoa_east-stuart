@@ -17,7 +17,7 @@ export function Home() {
         <div className="mb-20 grid grid-cols-1 gap-14 sm:grid-cols-2">
           <div>
             <Eyebrow>Who We Are</Eyebrow>
-            <p className="mb-4.5 text-[17px] leading-relaxed text-[var(--color-text-body)]">
+            <p className="drop-cap mb-4.5 text-[17px] leading-relaxed text-[var(--color-text-body)]">
               Heritage &amp; Opportunity Alliance, Inc. (HOA) is a newly formed, community-rooted Florida nonprofit
               corporation created to help residents preserve community identity, strengthen families, access
               opportunity, and participate meaningfully in decisions that shape their future.
@@ -30,7 +30,7 @@ export function Home() {
           </div>
           <div>
             <Eyebrow>Our Mission</Eyebrow>
-            <p className="mb-4.5 text-[17px] leading-relaxed text-[var(--color-text-body)]">
+            <p className="drop-cap mb-4.5 text-[17px] leading-relaxed text-[var(--color-text-body)]">
               Heritage &amp; Opportunity Alliance organizes residents, preserves community identity, connects people
               to resources and opportunities, and helps ensure public and private investment creates measurable
               benefits for historically impacted communities, especially East Stuart.

@@ -69,6 +69,18 @@ img {
   background-size: 22px 22px;
 }
 
+/* Illuminated-manuscript style drop cap for lead paragraphs */
+.drop-cap::first-letter {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 3.6em;
+  line-height: 0.78;
+  float: left;
+  padding-right: 10px;
+  padding-top: 4px;
+  color: var(--color-navy);
+}
+
 /* Double-rule frame used on cards to echo the crest's inner/outer ring */
 .frame-double {
   position: relative;
