@@ -1,96 +1,201 @@
-import { useEffect, useState } from 'react'
-import { NavLink, useLocation } from 'react-router-dom'
-import { NAV_LINKS, SITE } from '../content/site'
+import { useEffect, useRef, useState } from 'react'
+import { Link, NavLink, useLocation } from 'react-router-dom'
+import { NAV_CTA, NAV_GROUPS, NAV_HALL, NAV_RESOURCES, SITE } from '../content/site'
+import { MobileDrawer } from './MobileDrawer'
 
-const NAV_LINK_CLASS = ({ isActive }: { isActive: boolean }) =>
-  `border-b-2 pb-1 text-[15px] font-semibold no-underline ${
-    isActive
-      ? 'border-[var(--color-accent)] text-[var(--color-navy)]'
-      : 'border-transparent text-[var(--color-nav-inactive)] hover:text-[var(--color-navy)]'
-  }`
-
-const MOBILE_NAV_LINK_CLASS = ({ isActive }: { isActive: boolean }) =>
-  `block rounded px-3 py-3 text-[16px] font-semibold no-underline ${
-    isActive ? 'bg-[var(--color-bg)] text-[var(--color-navy)]' : 'text-[var(--color-nav-inactive)]'
-  }`
+const WIDE_QUERY = '(min-width: 1100px)'
 
 export function Header() {
-  const [open, setOpen] = useState(false)
   const location = useLocation()
+  const [wide, setWide] = useState(() => (typeof window === 'undefined' ? true : window.matchMedia(WIDE_QUERY).matches))
+  const [openMenu, setOpenMenu] = useState<'about' | 'updates' | null>(null)
+  const [drawerOpen, setDrawerOpen] = useState(false)
+  const menuToggleRef = useRef<HTMLButtonElement>(null)
+  const headerRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
-    setOpen(false)
+    const mq = window.matchMedia(WIDE_QUERY)
+    const onChange = () => {
+      setWide(mq.matches)
+      setDrawerOpen(false)
+      setOpenMenu(null)
+    }
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
+
+  useEffect(() => {
+    setOpenMenu(null)
+    setDrawerOpen(false)
   }, [location.pathname, location.hash])
 
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return
+      if (drawerOpen) {
+        setDrawerOpen(false)
+        menuToggleRef.current?.focus()
+      } else if (openMenu) {
+        setOpenMenu(null)
+      }
+    }
+    const onClick = (event: MouseEvent) => {
+      if (!openMenu) return
+      const target = event.target as HTMLElement
+      if (!target.closest('[data-nav-menu]')) setOpenMenu(null)
+    }
+    window.addEventListener('keydown', onKey)
+    window.addEventListener('click', onClick)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      window.removeEventListener('click', onClick)
+    }
+  }, [openMenu, drawerOpen])
+
+  const isGroupActive = (keys: string[]) => keys.some((path) => location.pathname === path)
+
   return (
-    <header className="sticky top-0 z-50 border-b border-[var(--color-border)] bg-[var(--color-surface)]">
-      <div className="flex items-center justify-between gap-4 px-5 py-3 sm:px-12 sm:py-3.5">
-        <NavLink to="/" className="flex min-w-0 items-center gap-3 no-underline sm:gap-3.5">
+    <header
+      ref={headerRef}
+      style={{ position: 'sticky', top: 0, zIndex: 50, background: '#091928', borderBottom: '1px solid rgba(216,188,127,.35)' }}
+    >
+      <a href="#main-content" className="skip-link">Skip to content</a>
+      <div
+        style={{
+          maxWidth: 1240,
+          margin: '0 auto',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 20,
+          padding: '12px clamp(16px,4vw,40px)',
+          minHeight: 68,
+        }}
+      >
+        <Link to="/" aria-label="Heritage and Opportunity Alliance home" style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0, textDecoration: 'none' }}>
           <img
-            src="/assets/logo.png"
-            alt="HOA crest"
-            className="h-11 w-11 flex-shrink-0 sm:h-13 sm:w-13"
-            style={{ objectFit: 'contain' }}
+            src="/assets/crest.jpg"
+            alt=""
+            style={{ width: 42, height: 42, borderRadius: '50%', objectFit: 'cover', border: '1px solid rgba(216,188,127,.55)', flexShrink: 0 }}
           />
-          <div className="min-w-0 leading-tight">
-            <div className="font-serif text-[15px] font-bold tracking-[0.01em] text-[var(--color-navy)] sm:text-[19px]">
-              {SITE.name}
-            </div>
-            <div className="label-caps truncate text-[10.5px] font-normal text-[var(--color-label-muted)] sm:text-[12px]">
+          <span style={{ display: 'flex', flexDirection: 'column', gap: 3, minWidth: 0 }}>
+            <span style={{ fontFamily: 'var(--font-cinzel)', fontSize: 12, letterSpacing: '.18em', color: '#f2ead8', textTransform: 'uppercase', lineHeight: 1.2 }}>
+              Heritage &amp; Opportunity Alliance
+            </span>
+            <span style={{ fontFamily: 'var(--font-cormorant)', fontStyle: 'italic', fontSize: 13, color: '#a9926a', lineHeight: 1 }}>
               {SITE.tagline}
-            </div>
-          </div>
-        </NavLink>
+            </span>
+          </span>
+        </Link>
 
-        <nav className="hidden items-center gap-7 lg:flex">
-          {NAV_LINKS.map((link) => (
-            <NavLink key={link.to} to={link.to} end={link.to === '/'} className={NAV_LINK_CLASS}>
-              {link.label}
-            </NavLink>
-          ))}
-          <NavLink
-            to="/get-involved#connect"
-            className="inline-block cursor-pointer rounded-[3px] bg-[var(--color-accent)] px-5.5 py-2.5 text-[14px] font-bold text-[var(--color-surface)] no-underline hover:bg-[var(--color-accent-hover)] hover:no-underline"
+        {wide ? (
+          <nav
+            aria-label="Main navigation"
+            style={{ display: 'flex', alignItems: 'center', gap: 22, fontFamily: 'var(--font-cinzel)', fontSize: 11, letterSpacing: '.17em', textTransform: 'uppercase', whiteSpace: 'nowrap' }}
           >
-            Donate
-          </NavLink>
-        </nav>
+            <NavLink to={NAV_HALL.to} end style={{ color: '#b9a882', textDecoration: 'none' }}>
+              {NAV_HALL.label}
+            </NavLink>
 
-        <button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          aria-label={open ? 'Close menu' : 'Open menu'}
-          aria-expanded={open}
-          className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded border border-[var(--color-border)] text-[var(--color-navy)] lg:hidden"
-        >
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-            {open ? (
-              <path d="M4 4L16 16M16 4L4 16" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-            ) : (
-              <>
-                <path d="M2.5 5.5H17.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-                <path d="M2.5 10H17.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-                <path d="M2.5 14.5H17.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-              </>
-            )}
-          </svg>
-        </button>
+            {NAV_GROUPS.map((group) => {
+              const active = isGroupActive(group.links.map((l) => l.to))
+              const open = openMenu === group.key
+              return (
+                <div key={group.key} data-nav-menu style={{ position: 'relative' }}>
+                  <button
+                    type="button"
+                    aria-expanded={open}
+                    aria-haspopup="true"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setOpenMenu((v) => (v === group.key ? null : group.key))
+                    }}
+                    style={{
+                      appearance: 'none',
+                      background: 'none',
+                      border: 0,
+                      borderBottom: `1px solid ${active ? '#d8bc7f' : 'transparent'}`,
+                      padding: '0 0 3px',
+                      cursor: 'pointer',
+                      letterSpacing: 'inherit',
+                      textTransform: 'inherit',
+                      font: 'inherit',
+                      color: '#d9c9a2',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 7,
+                    }}
+                  >
+                    {group.label}<span style={{ fontSize: 8 }}>▼</span>
+                  </button>
+                  {open && (
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: 'calc(100% + 16px)',
+                        right: -12,
+                        minWidth: group.key === 'about' ? 220 : 170,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        background: '#0b1c2e',
+                        border: '1px solid rgba(216,188,127,.4)',
+                        boxShadow: '0 26px 54px -22px rgba(0,0,0,.85)',
+                        padding: 8,
+                      }}
+                    >
+                      {group.links.map((link) => (
+                        <Link key={link.to} to={link.to} style={{ color: '#cfc2a0', padding: '11px 14px', textDecoration: 'none' }}>
+                          {link.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+
+            <NavLink
+              to={NAV_RESOURCES.to}
+              style={({ isActive }) => ({ color: '#d9c9a2', borderBottom: `1px solid ${isActive ? '#d8bc7f' : 'transparent'}`, paddingBottom: 3, textDecoration: 'none' })}
+            >
+              {NAV_RESOURCES.label}
+            </NavLink>
+            <Link to={NAV_CTA.to} style={{ color: '#0d1f33', background: '#d8bc7f', padding: '11px 18px', textDecoration: 'none' }}>
+              {NAV_CTA.label}
+            </Link>
+          </nav>
+        ) : (
+          <button
+            ref={menuToggleRef}
+            type="button"
+            onClick={() => setDrawerOpen(true)}
+            aria-label="Open menu"
+            aria-expanded={drawerOpen}
+            aria-controls="mobile-drawer"
+            style={{
+              appearance: 'none',
+              background: 'none',
+              border: '1px solid rgba(216,188,127,.45)',
+              width: 48,
+              height: 48,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 5,
+              cursor: 'pointer',
+              flexShrink: 0,
+            }}
+          >
+            <span style={{ display: 'block', width: 20, height: 1.5, background: '#d8bc7f' }} />
+            <span style={{ display: 'block', width: 20, height: 1.5, background: '#d8bc7f' }} />
+            <span style={{ display: 'block', width: 14, height: 1.5, background: '#d8bc7f', alignSelf: 'center' }} />
+          </button>
+        )}
       </div>
 
-      {open && (
-        <nav className="flex flex-col gap-1 border-t border-[var(--color-border)] px-5 pb-5 pt-3 lg:hidden">
-          {NAV_LINKS.map((link) => (
-            <NavLink key={link.to} to={link.to} end={link.to === '/'} className={MOBILE_NAV_LINK_CLASS}>
-              {link.label}
-            </NavLink>
-          ))}
-          <NavLink
-            to="/get-involved#connect"
-            className="mt-2 block rounded-[3px] bg-[var(--color-accent)] px-4 py-3 text-center text-[15px] font-bold text-[var(--color-surface)] no-underline hover:bg-[var(--color-accent-hover)] hover:no-underline"
-          >
-            Donate
-          </NavLink>
-        </nav>
+      {!wide && (
+        <MobileDrawer open={drawerOpen} onClose={() => { setDrawerOpen(false); menuToggleRef.current?.focus() }} />
       )}
     </header>
   )

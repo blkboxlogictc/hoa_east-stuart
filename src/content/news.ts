@@ -1,9 +1,9 @@
-export const UPDATES_EDITION = {
+export const NEWS_EDITION = {
   date: 'July 2026',
   title: 'Institutional Launch Edition',
 }
 
-export const UPDATES: string[] = [
+export const NEWS_ITEMS: string[] = [
   'Completed Florida nonprofit incorporation and secured an Employer Identification Number (EIN).',
   'Established a five-director governance framework and prepared bylaws, board resolutions, core policies, committee charters, financial controls, and organizational records for formal adoption.',
   'Convened community workshops and organizing meetings and created committee-specific WhatsApp channels as the primary system for updates, document distribution, requests, brainstorming, and follow-up.',

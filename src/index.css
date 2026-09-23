@@ -1,48 +1,56 @@
 @import "tailwindcss";
 
 @theme {
-  --font-serif: 'Playfair Display', Georgia, serif;
-  --font-sans: 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-cinzel: 'Cinzel', Georgia, serif;
+  --font-cormorant: 'Cormorant Garamond', Georgia, serif;
+  --font-source-sans: 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
-  --color-bg: #f6f4ee;
-  --color-surface: #fdfcf9;
-  --color-border: #e4e0d4;
+  --color-night: #091928;
+  --color-navy-panel: #0d2138;
+  --color-navy-menu: #0b1c2e;
+  --color-navy-ink: #10243b;
+  --color-navy-border: #2b3f5c;
+  --color-ivory: #faf7ef;
+  --color-ivory-card: #fffdf8;
+  --color-marble-base: #efeae0;
+  --color-gold: #d8bc7f;
+  --color-gold-deep: #a17a35;
+  --color-gold-ink: #8a6a2c;
+  --color-gold-muted: #c4ab77;
+  --color-gold-soft: #c9b489;
+  --color-gold-nav: #b9a882;
+  --color-gold-nav-2: #d9c9a2;
+  --color-gold-menu: #cfc2a0;
+  --color-gold-script: #a9926a;
+  --color-parchment: #f2ead8;
+  --color-parchment-2: #f6efdd;
+  --color-cream-cta: #e8d9b4;
+  --color-rule: #ddd2b4;
+  --color-rule-strong: #cdbf9c;
+  --color-text: #2b2a24;
+  --color-text-muted: #4a4739;
+  --color-text-faint: #6b6656;
+  --color-on-navy: #d3dbe6;
+  --color-on-navy-2: #c3cede;
+  --color-on-navy-3: #b7c4d6;
+  --color-on-night: #cfd8e6;
+  --color-drawer-link: #dfe5ee;
+  --color-footer-meta: #8797ad;
 
-  --color-navy: #14213d;
-  --color-navy-deep: #0e1830;
-  --color-navy-panel-border: #26324f;
-  --color-accent: #2f4d86;
-  --color-accent-hover: #1c2f57;
-
-  --color-gold: #a9873f;
-  --color-gold-soft: #d9c896;
-  --color-gold-deep: #83672c;
-
-  --color-text: #232320;
-  --color-text-body: #2b2a24;
-  --color-text-muted: #4d4a40;
-  --color-text-soft: #6b6656;
-  --color-label-muted: #948d78;
-  --color-nav-inactive: #5a5850;
-
-  --color-hero-eyebrow: #9db0d8;
-  --color-hero-body: #dbe1ee;
-  --color-footer-text: #b9c2d8;
-  --color-footer-text-soft: #a9b2c8;
-  --color-footer-label: #7d88a4;
-
-  --container-app: 1040px;
+  --container-app: 1120px;
+  --container-header: 1240px;
 }
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 90px;
 }
 
 body {
   margin: 0;
-  background: var(--color-bg);
+  background: var(--color-ivory);
   color: var(--color-text);
-  font-family: var(--font-sans);
+  font-family: var(--font-source-sans);
   min-height: 100vh;
 }
 
@@ -51,49 +59,69 @@ img {
   display: block;
 }
 
-/* ---------- Reusable ornamental primitives ---------- */
-
-/* Antique-gold small-caps eyebrow, used for section labels site-wide */
-.label-caps {
-  font-size: 13px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  font-weight: 700;
+a, button {
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* Subtle brocade / seal texture for navy panels — faint repeating diamond
-   lattice evoking the crest's ring pattern without competing with content. */
-.brocade {
-  background-image:
-    radial-gradient(circle at 1px 1px, rgba(217, 200, 150, 0.16) 1px, transparent 0);
+:focus-visible {
+  outline: 2px solid #d8bc7f;
+  outline-offset: 2px;
+}
+main:focus {
+  outline: none;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 20px;
+  z-index: 100;
+  background: #faf7ef;
+  color: #10243b;
+  padding: 12px 18px;
+  font-family: var(--font-cinzel);
+  font-size: 12px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.skip-link:focus {
+  top: 12px;
+}
+
+/* Subtle gold-dot texture used on dark navy panels (Commitments, Sponsors tiers, CTA bands) */
+.navy-texture {
+  background-image: radial-gradient(circle at 1px 1px, rgba(216, 188, 127, .12) 1px, transparent 0);
   background-size: 22px 22px;
 }
 
-/* Illuminated-manuscript style drop cap for lead paragraphs */
-.drop-cap::first-letter {
-  font-family: var(--font-serif);
-  font-weight: 700;
-  font-size: 3.6em;
-  line-height: 0.78;
-  float: left;
-  padding-right: 10px;
-  padding-top: 4px;
-  color: var(--color-navy);
+/* Marble page-header ("slab") background, used on every standalone page */
+.page-marble {
+  background-color: #efeae0;
+  background-image: url('/assets/marble-lg.png');
+  background-size: cover;
+  background-position: center;
 }
 
-/* Double-rule frame used on cards to echo the crest's inner/outer ring */
-.frame-double {
-  position: relative;
+@keyframes hoaSweep {
+  0% { opacity: 0; transform: translateX(-30%); }
+  20% { opacity: .55; }
+  100% { opacity: 0; transform: translateX(130%); }
 }
-.frame-double::after {
-  content: '';
-  position: absolute;
-  inset: 5px;
-  border: 1px solid transparent;
-  border-radius: 2px;
-  pointer-events: none;
-  transition: border-color 0.2s ease;
+@keyframes hoaRise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
 }
-.frame-double:hover::after {
-  border-color: rgba(169, 135, 63, 0.35);
+@keyframes epSweep {
+  0% { opacity: 0; transform: translateX(-40%); }
+  30% { opacity: .6; }
+  100% { opacity: 0; transform: translateX(140%); }
+}
+
+@media (max-width: 359px) {
+  .hall-nav-label { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
 }
